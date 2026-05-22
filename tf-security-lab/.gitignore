@@ -1,0 +1,23 @@
+# Terraform state files - NEVER commit these
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform lock file for state
+*.tflock
+
+# Terraform directory
+.terraform/
+.terraform.lock.hcl
+
+# AWS credentials - NEVER commit these
+*.pem
+.aws/
+
+# Environment variables
+*.env
+.env
+
+# Mac files
+.DS_Store
+*.csv

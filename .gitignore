@@ -1,0 +1,10 @@
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+*.tflock
+.terraform/
+.terraform.lock.hcl
+*.pem
+*.csv
+.env
+.DS_Store

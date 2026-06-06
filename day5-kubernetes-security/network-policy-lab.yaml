@@ -1,0 +1,65 @@
+# ── FRONTEND POD ──
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: security-lab
+  labels:
+    tier: frontend
+spec:
+  containers:
+  - name: frontend
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+    securityContext:
+      runAsNonRoot: false
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+  automountServiceAccountToken: false
+---
+# ── BACKEND POD ──
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: security-lab
+  labels:
+    tier: backend
+spec:
+  containers:
+  - name: backend
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+    securityContext:
+      runAsNonRoot: false
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+  automountServiceAccountToken: false
+---
+# ── DATABASE POD ──
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database
+  namespace: security-lab
+  labels:
+    tier: database
+spec:
+  containers:
+  - name: database
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+    securityContext:
+      runAsNonRoot: false
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+  automountServiceAccountToken: false

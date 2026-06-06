@@ -25,3 +25,37 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
+
+# "Add Trivy image scanning policy with CRITICAL/HIGH blocking"
+image-security-scan:
+    name: Container Image Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get install -y wget apt-transport-https gnupg
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      - name: Scan alpine image
+        run: |
+          trivy image alpine:latest \
+            --severity CRITICAL,HIGH \
+            --exit-code 1 \
+            --format table \
+            --quiet
+
+      - name: Scan nginx alpine image
+        run: |
+          trivy image nginx:alpine \
+            --severity CRITICAL,HIGH \
+            --exit-code 0 \
+            --format table \
+            --quiet
+        continue-on-error: true

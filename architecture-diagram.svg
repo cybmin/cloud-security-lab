@@ -1,0 +1,159 @@
+<svg width="100%" viewBox="0 0 680 820" xmlns="http://www.w3.org/2000/svg" style="font-family:Arial,sans-serif;background:white">
+<title>Cloud Security Engineering Portfolio — Defense in Depth Architecture</title>
+
+<!-- LAYER 1 LABEL -->
+<text x="40" y="28" font-size="11" font-weight="600" fill="#555">LAYER 1 — BEFORE DEPLOYMENT</text>
+
+<!-- Box 1: Terraform CI/CD -->
+<rect x="40" y="36" width="170" height="68" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="125" y="63" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">Terraform CI/CD</text>
+<text x="125" y="82" text-anchor="middle" font-size="11" fill="#185FA5">Validates IaC on every push</text>
+<text x="125" y="96" text-anchor="middle" font-size="11" fill="#185FA5">GitHub Actions pipeline</text>
+
+<!-- Arrow 1→2 -->
+<line x1="212" y1="70" x2="234" y2="70" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Box 2: Trivy -->
+<rect x="236" y="36" width="168" height="68" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="320" y="63" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">Trivy image scan</text>
+<text x="320" y="82" text-anchor="middle" font-size="11" fill="#185FA5">Blocks CRITICAL and HIGH</text>
+<text x="320" y="96" text-anchor="middle" font-size="11" fill="#185FA5">Exit-code 1 fails pipeline</text>
+
+<!-- Arrow 2→3 -->
+<line x1="406" y1="70" x2="428" y2="70" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Box 3: Approved -->
+<rect x="430" y="36" width="190" height="68" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="525" y="63" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">Image approved</text>
+<text x="525" y="82" text-anchor="middle" font-size="11" fill="#0F6E56">Zero CRITICAL or HIGH CVEs</text>
+<text x="525" y="96" text-anchor="middle" font-size="11" fill="#0F6E56">Passes to deployment</text>
+
+<!-- Down arrow A→B -->
+<line x1="335" y1="106" x2="335" y2="130" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- LAYER 2 LABEL -->
+<text x="40" y="148" font-size="11" font-weight="600" fill="#555">LAYER 2 — AT DEPLOYMENT</text>
+
+<!-- Gatekeeper box -->
+<rect x="40" y="154" width="590" height="68" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text x="335" y="179" text-anchor="middle" font-size="13" font-weight="600" fill="#633806">OPA / Gatekeeper admission control</text>
+<text x="335" y="199" text-anchor="middle" font-size="11" fill="#854F0B">Intercepts every pod deployment — rejects runAsRoot and missing security controls before scheduling</text>
+
+<!-- Down arrow B→C -->
+<line x1="335" y1="224" x2="335" y2="248" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- LAYER 3 LABEL -->
+<text x="40" y="264" font-size="11" font-weight="600" fill="#555">LAYER 3 — RUNTIME</text>
+
+<!-- K8s container -->
+<rect x="40" y="270" width="590" height="255" rx="12" fill="#F8F8F8" stroke="#AAAAAA" stroke-width="1" stroke-dasharray="6 3"/>
+<text x="335" y="294" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Kubernetes cluster — Calico CNI enforced</text>
+
+<!-- Pod security label -->
+<text x="335" y="316" text-anchor="middle" font-size="11" fill="#777">Pod security controls</text>
+
+<!-- Pod box 1 -->
+<rect x="57" y="323" width="172" height="62" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="143" y="346" text-anchor="middle" font-size="13" font-weight="600" fill="#3C3489">Non-root user</text>
+<text x="143" y="365" text-anchor="middle" font-size="11" fill="#534AB7">runAsNonRoot: true</text>
+
+<!-- Pod box 2 -->
+<rect x="244" y="323" width="172" height="62" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="330" y="346" text-anchor="middle" font-size="13" font-weight="600" fill="#3C3489">Read-only filesystem</text>
+<text x="330" y="365" text-anchor="middle" font-size="11" fill="#534AB7">No malware installation</text>
+
+<!-- Pod box 3 -->
+<rect x="431" y="323" width="172" height="62" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="517" y="346" text-anchor="middle" font-size="13" font-weight="600" fill="#3C3489">No token mount</text>
+<text x="517" y="365" text-anchor="middle" font-size="11" fill="#534AB7">API credential removed</text>
+
+<!-- Network policy label -->
+<text x="335" y="406" text-anchor="middle" font-size="11" fill="#777">Network policies — deny by default (Calico)</text>
+
+<!-- Frontend pod -->
+<rect x="57" y="414" width="148" height="50" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="131" y="434" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">Frontend</text>
+<text x="131" y="452" text-anchor="middle" font-size="11" fill="#185FA5">Public traffic only</text>
+
+<!-- Green allowed arrow -->
+<line x1="207" y1="439" x2="228" y2="439" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+<!-- Backend pod -->
+<rect x="230" y="414" width="148" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="304" y="434" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">Backend</text>
+<text x="304" y="452" text-anchor="middle" font-size="11" fill="#0F6E56">Frontend only</text>
+
+<!-- Green allowed arrow -->
+<line x1="380" y1="439" x2="400" y2="439" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+<!-- Database pod -->
+<rect x="402" y="414" width="148" height="50" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="476" y="434" text-anchor="middle" font-size="13" font-weight="600" fill="#3C3489">Database</text>
+<text x="476" y="452" text-anchor="middle" font-size="11" fill="#534AB7">Backend only</text>
+
+<!-- Blocked path -->
+<path d="M131 466 L131 488 L476 488 L476 466" fill="none" stroke="#E24B4A" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="303" y="504" text-anchor="middle" font-size="11" fill="#E24B4A">blocked — lateral movement prevented</text>
+
+<!-- Down arrow C→D -->
+<line x1="335" y1="528" x2="335" y2="552" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- LAYER 4 LABEL -->
+<text x="40" y="568" font-size="11" font-weight="600" fill="#555">LAYER 4 — AWS INFRASTRUCTURE</text>
+
+<!-- AWS container -->
+<rect x="40" y="574" width="590" height="222" rx="12" fill="#F8F8F8" stroke="#AAAAAA" stroke-width="1" stroke-dasharray="6 3"/>
+<text x="335" y="598" text-anchor="middle" font-size="13" font-weight="600" fill="#333">AWS account</text>
+
+<!-- VPC container -->
+<rect x="55" y="608" width="368" height="168" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="239" y="630" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">Secure VPC — three tier</text>
+
+<!-- Public subnet -->
+<rect x="68" y="640" width="100" height="118" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="118" y="660" text-anchor="middle" font-size="12" font-weight="600" fill="#085041">Public</text>
+<text x="118" y="678" text-anchor="middle" font-size="10" fill="#0F6E56">Load balancer</text>
+<text x="118" y="694" text-anchor="middle" font-size="10" fill="#0F6E56">Port 443 only</text>
+<text x="118" y="710" text-anchor="middle" font-size="10" fill="#0F6E56">IGW route</text>
+
+<!-- Arrow public→private -->
+<line x1="170" y1="700" x2="186" y2="700" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Private subnet -->
+<rect x="188" y="640" width="100" height="118" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text x="238" y="660" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Private</text>
+<text x="238" y="678" text-anchor="middle" font-size="10" fill="#854F0B">App servers</text>
+<text x="238" y="694" text-anchor="middle" font-size="10" fill="#854F0B">SG chaining</text>
+<text x="238" y="710" text-anchor="middle" font-size="10" fill="#854F0B">No IGW route</text>
+
+<!-- Arrow private→isolated -->
+<line x1="290" y1="700" x2="306" y2="700" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Isolated subnet -->
+<rect x="308" y="640" width="100" height="118" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="358" y="660" text-anchor="middle" font-size="12" font-weight="600" fill="#3C3489">Isolated</text>
+<text x="358" y="678" text-anchor="middle" font-size="10" fill="#534AB7">Database</text>
+<text x="358" y="694" text-anchor="middle" font-size="10" fill="#534AB7">No egress</text>
+<text x="358" y="710" text-anchor="middle" font-size="10" fill="#534AB7">VPC CIDR only</text>
+
+<!-- Transit Gateway -->
+<rect x="438" y="608" width="172" height="80" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="524" y="634" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">Transit Gateway</text>
+<text x="524" y="653" text-anchor="middle" font-size="11" fill="#0F6E56">Hub-and-spoke</text>
+<text x="524" y="671" text-anchor="middle" font-size="11" fill="#0F6E56">Blackhole routes</text>
+
+<!-- S3 -->
+<rect x="438" y="700" width="172" height="68" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+<text x="524" y="726" text-anchor="middle" font-size="13" font-weight="600" fill="#2C2C2A">S3 — encrypted</text>
+<text x="524" y="746" text-anchor="middle" font-size="11" fill="#444441">Terraform state + Flow Logs</text>
+
+<!-- DEFS -->
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+</svg>

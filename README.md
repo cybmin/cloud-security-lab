@@ -1,108 +1,66 @@
 # Cloud Security Engineering Portfolio
-Minhazul Abedin | Security Engineer | TS/SCI CI Poly
 
-## Why I Built This
+**Minhazul Abedin** | github.com/cybmin
 
-Honestly I wanted to level up my career and stay competitive in 
-a field that moves fast. After 8 years in cybersecurity across 
-the military, government, and commercial environments I realized 
-I had solid security fundamentals but needed to modernize my 
-cloud and automation knowledge to match where the industry is going.
+---
 
-So instead of just reading about Terraform and Kubernetes I decided 
-to actually build things. Real infrastructure. Real security 
-controls. Deployed to a real AWS account. This portfolio is that 
-journey documented as I go.
+## The Problem This Portfolio Solves
 
-## What I've Learned So Far
+In an unprotected cloud environment a single misconfigured container gives an attacker a JWT token to authenticate to the Kubernetes API server, unrestricted network access to reach every pod in the cluster, and root privileges to do anything they want. From there they can move laterally to other namespaces, steal sensitive data, and take down the entire system. I built this portfolio to make that attack path structurally impossible at every layer from the moment code is written to the moment a container runs in production.
 
-Terraform was way easier than I expected once I stopped reading 
-about it and started building. The hands on approach clicked fast 
-especially coming from a networking background where I already 
-think in terms of traffic flow, segmentation, and security 
-boundaries.
+---
 
-CI/CD pipelines were new territory for me. Getting GitHub Actions 
-to automatically validate my security configs on every push was 
-genuinely satisfying. Watching the green checkmark appear after 
-debugging a pipeline error felt more rewarding than any 
-multiple choice exam ever did.
+## The Most Important Thing I Learned
 
-The biggest mindset shift has been thinking about security as code 
-rather than a checklist. When your encryption policy lives in a 
-Terraform file that is versioned, peer reviewed, and automatically 
-tested on every change that is a completely different level of 
-confidence than hoping someone remembered to tick a box.
+A security control that breaks functionality gets disabled. A disabled control is worse than no control because you think you are protected when you are not. The best security is strict enough to stop the attack and functional enough that engineers never feel the need to turn it off. I learned this the hard way when my Kubernetes network policies were so strict they broke DNS resolution across the entire cluster. The fix was surgical. That experience changed how I think about every control I build.
 
-## Labs
+---
 
-### Lab 1 — S3 Security and IaC Foundation
-Location: tf-security-lab/
+## What I Built
 
-Built a reusable Terraform module that enforces CIS AWS Benchmark 
-controls on S3 buckets automatically. Set up remote state in an 
-encrypted S3 backend with state locking. Built a GitHub Actions 
-CI/CD pipeline that validates security configs on every code push.
+### Day 1 and 2 — Terraform Security and CI/CD
+Built reusable Terraform modules enforcing CIS AWS Benchmark controls 2.1.1 and 2.1.2 automatically on every S3 deployment. Configured encrypted remote state backend with state locking. Built a GitHub Actions CI/CD pipeline that validates security configurations on every code push.
 
-Biggest lesson from this one: I accidentally staged my AWS 
-credentials file and tried to push it to GitHub mid lab. GitHub 
-secret scanning caught it instantly and blocked the push. I rotated 
-the keys immediately, fixed the gitignore, and kept moving. Better 
-to learn that lesson in a personal lab than in a production 
-environment protecting real assets.
+The key insight: security as code means security that enforces itself. A checklist depends on humans remembering. A Terraform module enforces the control whether anyone remembers or not.
 
-### Lab 2 — Secure VPC Network Architecture
-Location: vpc-security-lab/
+### Day 3 — Secure VPC Architecture
+Architected a three-tier VPC with defense-in-depth security group chaining across public, private, and isolated subnets. Enforced least-privilege traffic rules using security group ID references rather than IP ranges. Implemented VPC Flow Logs to an encrypted CIS-hardened S3 bucket.
 
-Built a three tier VPC from scratch with public, private, and 
-isolated subnets. I designed the architecture thinking about 
-both the defensive and offensive angles which is what Purple 
-Team work trains you to do. If I compromised the load balancer 
-what is my blast radius? If I got a foothold on an app server 
-how do I reach the database?
+### Day 4 — Transit Gateway Hub and Spoke
+Designed hub-and-spoke network architecture connecting production, development, and shared-services VPCs. Disabled default route propagation. Implemented blackhole routes that actively drop dev-to-prod traffic at the routing layer.
 
-The answer with this architecture is that I cannot easily. Three 
-separate security boundaries with least privilege rules and no 
-internet routes on the sensitive tiers. VPC Flow Logs capture 
-everything to an encrypted bucket so there is always a full audit 
-trail. I also hit a real bug where Terraform defaulted to 
-CloudWatch instead of S3 for flow log delivery and had to debug 
-it live which was a useful learning moment.
+The principle: gaps can be exploited. Walls cannot. Never rely on the absence of a configuration as a security control.
 
-### Lab 3 — Transit Gateway Hub and Spoke Architecture
-Location: day4-transit-gateway/
+### Day 5 — Kubernetes Security
+Deployed an insecure pod running as root and proved the attack path hands on — found a real JWT service account token inside the container in under five minutes. Then deployed a hardened pod and proved each control works by trying to bypass it. Built three-tier network policies with Calico CNI enforcing deny-by-default segmentation.
 
-Built a Transit Gateway connecting three VPCs with explicit 
-security boundaries enforced at the routing level. The key 
-insight here was disabling default route propagation so nothing 
-connects automatically. Every permitted path is explicitly defined 
-and every blocked path has a blackhole route actively dropping 
-the traffic.
+### Day 6 — Image Scanning and Admission Control
+Scanned real production images with Trivy. Ubuntu returned 72 vulnerabilities including 9 HIGH. Alpine returned zero. Built an automated scan policy script with exit-code enforcement. Deployed OPA/Gatekeeper with a ConstraintTemplate in Rego blocking any pod with runAsUser 0. Tried to deploy the insecure pod — Kubernetes itself rejected it.
 
-The architect lesson that stuck with me: never rely on the absence 
-of a configuration as a security control. A missing route leaves 
-ambiguity. A blackhole route is an explicit wall. Gaps can be 
-exploited. Walls cannot.
+---
 
-## Coming Soon
+## The Full Defense in Depth Stack
+---
 
-Kubernetes security and EKS hardening, AI security and LLM threat 
-mitigation, and a combined cloud and AI security reference 
-architecture that ties everything together into one cohesive 
-portfolio project.
+## What I Would Build Next
 
-## Background
+EKS lab covering IRSA, EKS Pod Identity, and GuardDuty for runtime threat detection. Then AI security week covering prompt injection defenses, agentic AI security controls, LLM governance frameworks, and shadow AI discovery.
 
-8 years in cybersecurity spanning military service, government 
-programs, and commercial industry. I started in IT help desk and 
-network administration which gave me a strong technical foundation 
-before moving into security. My experience since then has been a 
-mix of SOC operations, Purple Team consulting, penetration testing, 
-and vulnerability management across federal and private sector 
-environments. Currently a Security Engineer and Purple Team 
-Consultant holding an active TS/SCI CI Poly clearance.
+---
 
-This portfolio represents my intentional push into cloud security 
-engineering and AI security — taking the broad security foundation 
-I have built over 8 years and adding modern infrastructure 
-automation and cloud native security skills on top of it.
+## Repository Structure
+---
+
+## Technical Stack
+
+**IaC and CI/CD:** Terraform, GitHub Actions, CIS Benchmarks
+
+**Cloud:** AWS VPC, Transit Gateway, S3, IAM
+
+**Kubernetes:** minikube, Calico CNI, OPA/Gatekeeper, Trivy, Network Policies
+
+**Security concepts:** Defense in depth, least privilege networking, admission control, image scanning, zero-trust architecture, shift-left security
+
+---
+
+*Built to demonstrate the thinking behind the controls — not just the tools.*
